@@ -3,43 +3,8 @@ from flask import request, jsonify
 import webbrowser
 from recipe_scrapers import scrape_me
 
-
-# -- Recipe Scraper Boilerplate Code -- 
-# # give the url as a string, it can be url from any site listed below
-scraper = scrape_me('https://thewoksoflife.com/cumin-lamb-biang-biang-noodles/')
-
-# print("\n- Title - ")
-# print(scraper.title())
-# # scraper.total_time()
-# # scraper.yields()
-# print("\n- Ingredients -")
-# for x in scraper.ingredients():
-#     print(x)
-# # scraper.instructions()
-# webbrowser.open(scraper.image())
-# # scraper.links()
-
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-
-# Create some test data for our catalog in the form of a list of dictionaries.
-books = [
-    {'id': 0,
-     'title': 'A Fire Upon the Deep',
-     'author': 'Vernor Vinge',
-     'first_sentence': 'The coldsleep itself was dreamless.',
-     'year_published': '1992'},
-    {'id': 1,
-     'title': 'The Ones Who Walk Away From Omelas',
-     'author': 'Ursula K. Le Guin',
-     'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
-     'published': '1973'},
-    {'id': 2,
-     'title': 'Dhalgren',
-     'author': 'Samuel R. Delany',
-     'first_sentence': 'to wound the autumnal city.',
-     'published': '1975'}
-]
 
 
 @app.route('/', methods=['GET'])
@@ -81,27 +46,23 @@ def api_url():
     # If url is provided, assign it to a variable.
     # If no url is provided, display an error in the browser.
     if 'recipe_url' in request.args:
-        recipe_url = int(request.args['recipe_url'])
+        # recipe_url = int(request.args['recipe_url'])
+        recipe_url = request.args['recipe_url']
+        # print(request.args['recipe_url'])
+        # recipe_url = 'https://thewoksoflife.com/cumin-lamb-biang-biang-noodles/'
     else:
         return "Error: No recipe_url field provided. Please specify a recipe_url."
 
-    results = scraper.title()
+    # Create scraper object
+    scraper = scrape_me(recipe_url)
 
+    # Use the jsonify function from Flask to convert our recipe 
+    # attributes to the JSON format.
+    return jsonify(
+        title=scraper.title(),
+        yields=scraper.yields(),
+        instructions=scraper.instructions(),
+    )
     return jsonify(results)
-
-    # # Create an empty list for our results
-    # results = []
-
-    # # Loop through the data and match results that fit the requested ID.
-    # # IDs are unique, but other fields might return many results
-    # for book in books:
-    #     if book['id'] == id:
-    #         results.append(book)
-
-    # # Use the jsonify function from Flask to convert our list of
-    # # Python dictionaries to the JSON format.
-    # return jsonify(results)
-
-
 
 app.run()
