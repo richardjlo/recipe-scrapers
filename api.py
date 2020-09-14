@@ -46,10 +46,7 @@ def api_url():
     # If url is provided, assign it to a variable.
     # If no url is provided, display an error in the browser.
     if 'recipe_url' in request.args:
-        # recipe_url = int(request.args['recipe_url'])
         recipe_url = request.args['recipe_url']
-        # print(request.args['recipe_url'])
-        # recipe_url = 'https://thewoksoflife.com/cumin-lamb-biang-biang-noodles/'
     else:
         return "Error: No recipe_url field provided. Please specify a recipe_url."
 
