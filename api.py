@@ -1,6 +1,5 @@
 import flask
 from flask import request, jsonify
-import webbrowser
 from recipe_scrapers import scrape_me
 
 app = flask.Flask(__name__)
